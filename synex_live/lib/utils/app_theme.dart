@@ -60,7 +60,7 @@ class AppTheme {
     textButtonTheme: TextButtonThemeData(
       style: TextButton.styleFrom(foregroundColor: primary),
     ),
-    cardTheme: CardTheme(
+    cardTheme: CardThemeData(
       color: card, elevation: 0,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       margin: EdgeInsets.zero,
