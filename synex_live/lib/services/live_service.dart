@@ -38,9 +38,12 @@ class LiveService {
   static Stream<List<LiveModel>> getLiveSessions() =>
     _db.collection(AppConstants.livesCollection)
       .where('isLive', isEqualTo: true)
-      .orderBy('startedAt', descending: true)
       .snapshots()
-      .map((s) => s.docs.map(LiveModel.fromFirestore).toList());
+      .map((snapshot) {
+        final list = snapshot.docs.map((doc) => LiveModel.fromFirestore(doc)).toList();
+        list.sort((a, b) => b.startedAt.compareTo(a.startedAt));
+        return list;
+      });
 
   static Stream<LiveModel?> getLiveSession(String liveId) =>
     _db.collection(AppConstants.livesCollection).doc(liveId).snapshots()
