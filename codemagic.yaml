@@ -1,0 +1,22 @@
+workflows:
+  android-release:
+    name: Synex Live Android Build
+    max_build_duration: 60
+    environment:
+      flutter: stable
+      java: 17
+    scripts:
+      - name: Get packages
+        script: |
+          cd synex_live
+          flutter pub get
+      - name: Build APK
+        script: |
+          cd synex_live
+          flutter build apk --release --no-tree-shake-icons
+    artifacts:
+      - synex_live/build/**/outputs/**/*.apk
+    publishing:
+      email:
+        recipients:
+          - filmexplainthefact@gmail.com
