@@ -1,0 +1,56 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper: is authenticated
+    function isAuth() { return request.auth != null; }
+
+    // Helper: is the owner of a document
+    function isOwner(uid) { return request.auth.uid == uid; }
+
+    // USERS: read public, write own only
+    match /users/{userId} {
+      allow read: if isAuth();
+      allow write: if isAuth() && isOwner(userId);
+    }
+
+    // LIVES: anyone can read, only auth can create, only host can update/delete
+    match /lives/{liveId} {
+      allow read: if isAuth();
+      allow create: if isAuth() && request.resource.data.hostId == request.auth.uid;
+      allow update: if isAuth() && (
+        resource.data.hostId == request.auth.uid ||
+        // Allow viewer count updates
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly(['viewerCount'])
+      );
+      allow delete: if isAuth() && resource.data.hostId == request.auth.uid;
+    }
+
+    // CHATS: anyone can read, authenticated can write
+    match /live_chats/{liveId}/messages/{msgId} {
+      allow read: if isAuth();
+      allow create: if isAuth() && request.resource.data.userId == request.auth.uid;
+      allow update, delete: if false;
+    }
+
+    // REQUESTS: authenticated users can write, host can update status
+    match /live_requests/{liveId} {
+      allow read: if isAuth();
+      allow write: if isAuth();
+    }
+
+    // SIGNALING: for WebRTC (any authenticated user in a live can write)
+    match /signaling/{liveId}/connections/{connId} {
+      allow read, write: if isAuth();
+    }
+    match /signaling/{liveId}/ice_candidates/{uid}/{peerId}/{docId} {
+      allow read, write: if isAuth();
+    }
+
+    // NOTIFICATIONS: server-side write only (Cloud Functions)
+    match /notifications/{notifId} {
+      allow read: if isAuth() && resource.data.targetUserId == request.auth.uid;
+      allow write: if isAuth();
+    }
+  }
+}
