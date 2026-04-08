@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../services/auth_service.dart';
 import '../services/live_service.dart';
-import '../services/webrtc_service.dart';
+import '../services/webrtc_service.dart'
+    if (dart.library.html) '../services/webrtc_service.dart';
 import '../models/live_model.dart';
 import '../models/chat_model.dart';
 import '../utils/app_theme.dart';
