@@ -99,10 +99,10 @@ class _GoLiveScreenState extends State<GoLiveScreen> {
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: const [
             Text('Live Session Rules', style: TextStyle(color: AppTheme.textPri, fontSize: 13, fontWeight: FontWeight.w700)),
             SizedBox(height: 8),
-            Text('â€¢ Max 6 speakers on stage at a time\n'
-              'â€¢ Audience can raise hand to speak\n'
-              'â€¢ You can mute, remove, or block users\n'
-              'â€¢ Session ends when you click "End Live"',
+            Text('- Max 6 speakers on stage at a time\n'
+'- Audience can raise hand to speak\n'
+'- You can mute, remove, or block users\n'
+'- Session ends when you click "End Live"'
               style: TextStyle(color: AppTheme.textSec, fontSize: 12, height: 1.6)),
           ]),
         ),
